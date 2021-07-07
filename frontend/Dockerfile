@@ -1,15 +1,15 @@
-FROM node:current-alpine AS base
+FROM node:alpine
 
-RUN apk update && apk add python make g++
+RUN apk add --no-cache libc6-compat
 
-WORKDIR /base
+RUN mkdir -p /app 
 
-ADD package*.json ./
+WORKDIR /app
 
-RUN npm install
+COPY . /app
 
-COPY . .
+RUN npm install && npm install chokidar
 
-EXPOSE 8080
+EXPOSE 3000
 
-CMD npm run start
+CMD ["npm", "start"]

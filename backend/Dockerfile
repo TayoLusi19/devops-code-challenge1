@@ -1,15 +1,17 @@
-FROM node:latest
+FROM node:alpine AS builder
+RUN apk add --no-cache libc6-compat
 
-RUN mkdir -p /usr/src/app
+#define app dir
+WORKDIR /app
 
-WORKDIR /usr/src/app
+#copy all the source code to app dir
+COPY . /app
 
-COPY package.json /usr/src/app/
 
+#install all dependencies listed in package.json
 RUN npm install
 
-COPY . /usr/src/app
+#mapping of port to docker daemon
+EXPOSE 8080
 
-EXPOSE 3000
-
-CMD [ "npm", "start" ]
+CMD ["node", "index.js"]
